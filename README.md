@@ -13,7 +13,7 @@ I built a CPU-only Streamlit app that generates image captions using Salesforce 
 | `alerts.yml`, `alertmanager.yml`, `alert_receiver.py` | Alert rules and notifications |
 | `grafana/` | Dashboard JSON and data-source configuration |
 | `tests/` | Automated tests |
-| `docs/` | Design, calculations and AI attribution |
+| `AI_PROMPTS_DASHBOARD.md` | AI assistance and complex dashboard queries |
 | `evidence/` | Screenshots and caption results |
 
 ## Setup

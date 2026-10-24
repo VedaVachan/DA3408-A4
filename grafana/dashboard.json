@@ -2,14 +2,14 @@
   "id": null,
   "uid": "da3408-a4-captioning",
   "title": "DA3408 A4 - Image Captioning Observability",
-  "description": "CPU captioning health, workload, latency, and Ubuntu VM resources.",
+  "description": "CPU captioning health, workload, latency, and Ubuntu VM resources. AI assistance prompt: Generate a Grafana dashboard for caption_* and node_exporter metrics. Include health, counts, throughput, histogram percentiles, Summary mean, errors, active jobs, client buckets, model memory, and CPU/RAM correlation with bulk jobs. Use correct units, explicit legends, and descriptions. Presentation update prompt: Add short visible subtitles, explicit linear scale labels, inclusive colors, distinct dash patterns, legends and self-explanatory descriptions. Preserve existing metric queries and the 5-second refresh interval. Query explanations: AI_PROMPTS_DASHBOARD.md.",
   "tags": [
     "DA3408",
     "A4",
     "Prometheus"
   ],
   "schemaVersion": 39,
-  "version": 2,
+  "version": 3,
   "editable": true,
   "timezone": "browser",
   "refresh": "5s",
@@ -34,7 +34,7 @@
   "panels": [
     {
       "id": 1,
-      "title": "Application metrics UP",
+      "title": "Application metrics UP | scrape health",
       "description": "1 = metrics endpoint reachable; 0 = scrape failed. This does not independently test the browser UI.",
       "type": "stat",
       "datasource": {
@@ -68,7 +68,8 @@
           "min": 0,
           "noValue": "No data",
           "color": {
-            "mode": "palette-classic"
+            "mode": "fixed",
+            "fixedColor": "#0072B2"
           }
         },
         "overrides": []
@@ -88,7 +89,7 @@
     },
     {
       "id": 2,
-      "title": "Node exporter UP",
+      "title": "Node exporter UP | system scrape health",
       "description": "1 = Ubuntu system metrics reachable; 0 = scrape failed.",
       "type": "stat",
       "datasource": {
@@ -122,7 +123,8 @@
           "min": 0,
           "noValue": "No data",
           "color": {
-            "mode": "palette-classic"
+            "mode": "fixed",
+            "fixedColor": "#0072B2"
           }
         },
         "overrides": []
@@ -142,7 +144,7 @@
     },
     {
       "id": 3,
-      "title": "Model ready",
+      "title": "Model ready | loaded on CPU",
       "description": "1 = shared CPU model loaded. Zero before its first successful load.",
       "type": "stat",
       "datasource": {
@@ -176,7 +178,8 @@
           "min": 0,
           "noValue": "No data",
           "color": {
-            "mode": "palette-classic"
+            "mode": "fixed",
+            "fixedColor": "#0072B2"
           }
         },
         "overrides": []
@@ -196,7 +199,7 @@
     },
     {
       "id": 4,
-      "title": "Successful images",
+      "title": "Successful images | since app start",
       "description": "Successful image attempts since the application process started.",
       "type": "stat",
       "datasource": {
@@ -230,7 +233,8 @@
           "min": 0,
           "noValue": "No data",
           "color": {
-            "mode": "palette-classic"
+            "mode": "fixed",
+            "fixedColor": "#0072B2"
           }
         },
         "overrides": []
@@ -250,7 +254,7 @@
     },
     {
       "id": 5,
-      "title": "Failed images",
+      "title": "Failed images | since app start",
       "description": "Failed image attempts, including image validation failures.",
       "type": "stat",
       "datasource": {
@@ -284,7 +288,8 @@
           "min": 0,
           "noValue": "No data",
           "color": {
-            "mode": "palette-classic"
+            "mode": "fixed",
+            "fixedColor": "#0072B2"
           }
         },
         "overrides": []
@@ -304,7 +309,7 @@
     },
     {
       "id": 6,
-      "title": "Active jobs",
+      "title": "Active jobs | running + queued",
       "description": "Jobs currently running or waiting for the shared model.",
       "type": "stat",
       "datasource": {
@@ -338,7 +343,8 @@
           "min": 0,
           "noValue": "No data",
           "color": {
-            "mode": "palette-classic"
+            "mode": "fixed",
+            "fixedColor": "#0072B2"
           }
         },
         "overrides": []
@@ -358,7 +364,7 @@
     },
     {
       "id": 7,
-      "title": "Successful throughput",
+      "title": "Successful throughput | 1-minute rate",
       "description": "Successful images per second, averaged over one minute. Idle periods approach zero.",
       "type": "timeseries",
       "datasource": {
@@ -405,7 +411,8 @@
           "min": 0,
           "noValue": "No data",
           "color": {
-            "mode": "palette-classic"
+            "mode": "fixed",
+            "fixedColor": "#0072B2"
           },
           "custom": {
             "drawStyle": "line",
@@ -415,7 +422,7 @@
             "showPoints": "always",
             "pointSize": 4,
             "spanNulls": false,
-            "axisLabel": "Images / second",
+            "axisLabel": "Images / second \u00b7 linear",
             "axisPlacement": "left",
             "scaleDistribution": {
               "type": "linear"
@@ -463,7 +470,7 @@
                 "value": {
                   "fill": "dash",
                   "dash": [
-                    6,
+                    8,
                     4
                   ]
                 }
@@ -486,7 +493,7 @@
     },
     {
       "id": 8,
-      "title": "Image attempts by mode and outcome",
+      "title": "Image attempts by mode and outcome | since app start",
       "description": "Cumulative attempts since process startup. A restart resets these counters.",
       "type": "timeseries",
       "datasource": {
@@ -559,7 +566,8 @@
           "min": 0,
           "noValue": "No data",
           "color": {
-            "mode": "palette-classic"
+            "mode": "fixed",
+            "fixedColor": "#0072B2"
           },
           "custom": {
             "drawStyle": "line",
@@ -569,7 +577,7 @@
             "showPoints": "always",
             "pointSize": 4,
             "spanNulls": false,
-            "axisLabel": "Image attempts",
+            "axisLabel": "Image attempts \u00b7 linear",
             "axisPlacement": "left",
             "scaleDistribution": {
               "type": "linear"
@@ -616,7 +624,7 @@
                 "value": {
                   "fill": "dash",
                   "dash": [
-                    6,
+                    8,
                     4
                   ]
                 }
@@ -639,7 +647,11 @@
               {
                 "id": "custom.lineStyle",
                 "value": {
-                  "fill": "solid"
+                  "fill": "dash",
+                  "dash": [
+                    2,
+                    4
+                  ]
                 }
               }
             ]
@@ -662,7 +674,7 @@
                 "value": {
                   "fill": "dash",
                   "dash": [
-                    6,
+                    12,
                     4
                   ]
                 }
@@ -685,7 +697,7 @@
     },
     {
       "id": 9,
-      "title": "Inference latency: p50 / p95 / p99",
+      "title": "Inference latency: p50 / p95 / p99 | 5-minute estimates",
       "description": "Estimated percentiles over five minutes, across successful inference calls. Excludes queue wait. No observations means no percentile, not zero latency.",
       "type": "timeseries",
       "datasource": {
@@ -745,7 +757,8 @@
           "min": 0,
           "noValue": "No data",
           "color": {
-            "mode": "palette-classic"
+            "mode": "fixed",
+            "fixedColor": "#0072B2"
           },
           "custom": {
             "drawStyle": "line",
@@ -755,7 +768,7 @@
             "showPoints": "always",
             "pointSize": 4,
             "spanNulls": false,
-            "axisLabel": "Inference time (seconds)",
+            "axisLabel": "Inference time (seconds) \u00b7 linear",
             "axisPlacement": "left",
             "scaleDistribution": {
               "type": "linear"
@@ -802,7 +815,7 @@
                 "value": {
                   "fill": "dash",
                   "dash": [
-                    6,
+                    8,
                     4
                   ]
                 }
@@ -825,7 +838,11 @@
               {
                 "id": "custom.lineStyle",
                 "value": {
-                  "fill": "solid"
+                  "fill": "dash",
+                  "dash": [
+                    2,
+                    4
+                  ]
                 }
               }
             ]
@@ -846,7 +863,7 @@
     },
     {
       "id": 10,
-      "title": "Mean image duration: Summary",
+      "title": "Mean image duration: Summary | 5-minute mean",
       "description": "Five-minute mean = rate(_sum) / rate(_count). Includes validation, queue wait, and failed image attempts. Undefined when no attempts occur.",
       "type": "timeseries",
       "datasource": {
@@ -893,7 +910,8 @@
           "min": 0,
           "noValue": "No data",
           "color": {
-            "mode": "palette-classic"
+            "mode": "fixed",
+            "fixedColor": "#0072B2"
           },
           "custom": {
             "drawStyle": "line",
@@ -903,7 +921,7 @@
             "showPoints": "always",
             "pointSize": 4,
             "spanNulls": false,
-            "axisLabel": "Time per image attempt (seconds)",
+            "axisLabel": "Time per image attempt (seconds) \u00b7 linear",
             "axisPlacement": "left",
             "scaleDistribution": {
               "type": "linear"
@@ -950,7 +968,7 @@
                 "value": {
                   "fill": "dash",
                   "dash": [
-                    6,
+                    8,
                     4
                   ]
                 }
@@ -973,7 +991,7 @@
     },
     {
       "id": 11,
-      "title": "CPU utilisation and bulk activity",
+      "title": "CPU utilisation and bulk activity | VM % vs. bulk jobs",
       "description": "Ubuntu VM utilisation on the left axis; active bulk jobs on the right. Compare their timing to inspect correlation. Other VM processes also use resources.",
       "type": "timeseries",
       "datasource": {
@@ -1020,7 +1038,8 @@
           "min": 0,
           "noValue": "No data",
           "color": {
-            "mode": "palette-classic"
+            "mode": "fixed",
+            "fixedColor": "#0072B2"
           },
           "max": 100,
           "custom": {
@@ -1031,7 +1050,7 @@
             "showPoints": "always",
             "pointSize": 4,
             "spanNulls": false,
-            "axisLabel": "VM utilisation (%)",
+            "axisLabel": "VM utilisation (%) \u00b7 linear",
             "axisPlacement": "left",
             "scaleDistribution": {
               "type": "linear"
@@ -1078,7 +1097,7 @@
                 "value": {
                   "fill": "dash",
                   "dash": [
-                    6,
+                    8,
                     4
                   ]
                 }
@@ -1105,7 +1124,7 @@
               },
               {
                 "id": "custom.axisLabel",
-                "value": "Active bulk jobs (count)"
+                "value": "Active bulk jobs (count) \u00b7 linear"
               },
               {
                 "id": "custom.axisSoftMax",
@@ -1129,7 +1148,7 @@
     },
     {
       "id": 12,
-      "title": "RAM utilisation and bulk activity",
+      "title": "RAM utilisation and bulk activity | VM % vs. bulk jobs",
       "description": "Ubuntu VM utilisation on the left axis; active bulk jobs on the right. Compare their timing to inspect correlation. Other VM processes also use resources.",
       "type": "timeseries",
       "datasource": {
@@ -1176,7 +1195,8 @@
           "min": 0,
           "noValue": "No data",
           "color": {
-            "mode": "palette-classic"
+            "mode": "fixed",
+            "fixedColor": "#0072B2"
           },
           "max": 100,
           "custom": {
@@ -1187,7 +1207,7 @@
             "showPoints": "always",
             "pointSize": 4,
             "spanNulls": false,
-            "axisLabel": "VM utilisation (%)",
+            "axisLabel": "VM utilisation (%) \u00b7 linear",
             "axisPlacement": "left",
             "scaleDistribution": {
               "type": "linear"
@@ -1234,7 +1254,7 @@
                 "value": {
                   "fill": "dash",
                   "dash": [
-                    6,
+                    8,
                     4
                   ]
                 }
@@ -1261,7 +1281,7 @@
               },
               {
                 "id": "custom.axisLabel",
-                "value": "Active bulk jobs (count)"
+                "value": "Active bulk jobs (count) \u00b7 linear"
               },
               {
                 "id": "custom.axisSoftMax",
@@ -1285,7 +1305,7 @@
     },
     {
       "id": 13,
-      "title": "Root disk utilisation",
+      "title": "Root disk utilisation | available-space basis",
       "description": "Percentage unavailable to a normal user on Ubuntu's root filesystem, including reserved blocks; follows available-space semantics.",
       "type": "timeseries",
       "datasource": {
@@ -1319,7 +1339,8 @@
           "min": 0,
           "noValue": "No data",
           "color": {
-            "mode": "palette-classic"
+            "mode": "fixed",
+            "fixedColor": "#0072B2"
           },
           "max": 100,
           "custom": {
@@ -1330,14 +1351,36 @@
             "showPoints": "always",
             "pointSize": 4,
             "spanNulls": false,
-            "axisLabel": "Root disk used (%)",
+            "axisLabel": "Root disk used (%) \u00b7 linear",
             "axisPlacement": "left",
             "scaleDistribution": {
               "type": "linear"
             }
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#0072B2"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid"
+                }
+              }
+            ]
+          }
+        ]
       },
       "options": {
         "legend": {
@@ -1353,7 +1396,7 @@
     },
     {
       "id": 14,
-      "title": "Application RAM and model parameters",
+      "title": "Application RAM and model parameters | RSS vs. weights",
       "description": "Process RSS includes the model and runtime allocations. Parameter bytes count tensor parameters only; they are not total model runtime memory.",
       "type": "timeseries",
       "datasource": {
@@ -1400,7 +1443,8 @@
           "min": 0,
           "noValue": "No data",
           "color": {
-            "mode": "palette-classic"
+            "mode": "fixed",
+            "fixedColor": "#0072B2"
           },
           "custom": {
             "drawStyle": "line",
@@ -1410,7 +1454,7 @@
             "showPoints": "always",
             "pointSize": 4,
             "spanNulls": false,
-            "axisLabel": "Memory (bytes; displayed in binary units)",
+            "axisLabel": "Memory (bytes) \u00b7 linear",
             "axisPlacement": "left",
             "scaleDistribution": {
               "type": "linear"
@@ -1457,7 +1501,7 @@
                 "value": {
                   "fill": "dash",
                   "dash": [
-                    6,
+                    8,
                     4
                   ]
                 }
@@ -1480,7 +1524,7 @@
     },
     {
       "id": 15,
-      "title": "Upload job duration: p95",
+      "title": "Upload job duration: p95 | 5-minute estimate",
       "description": "Estimated five-minute p95 of complete jobs, including validation and model loading. Bulk jobs normally take longer because they contain multiple images.",
       "type": "timeseries",
       "datasource": {
@@ -1527,7 +1571,8 @@
           "min": 0,
           "noValue": "No data",
           "color": {
-            "mode": "palette-classic"
+            "mode": "fixed",
+            "fixedColor": "#0072B2"
           },
           "custom": {
             "drawStyle": "line",
@@ -1537,7 +1582,7 @@
             "showPoints": "always",
             "pointSize": 4,
             "spanNulls": false,
-            "axisLabel": "Job duration (seconds)",
+            "axisLabel": "Job duration (seconds) \u00b7 linear",
             "axisPlacement": "left",
             "scaleDistribution": {
               "type": "linear"
@@ -1584,7 +1629,7 @@
                 "value": {
                   "fill": "dash",
                   "dash": [
-                    6,
+                    8,
                     4
                   ]
                 }
@@ -1607,7 +1652,7 @@
     },
     {
       "id": 16,
-      "title": "Completed upload jobs",
+      "title": "Completed upload jobs | since app start",
       "description": "Cumulative upload jobs by mode and outcome. Rejected ZIPs are job failures before image processing and do not increment image-attempt counters.",
       "type": "timeseries",
       "datasource": {
@@ -1623,8 +1668,99 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum by (mode, status) (caption_jobs_total{job=\"caption_app\"})",
-          "legendFormat": "{{mode}} / {{status}}",
+          "expr": "sum(caption_jobs_total{job=\"caption_app\",mode=\"single\",status=\"success\"})",
+          "legendFormat": "single / success",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a4-prometheus"
+          },
+          "editorMode": "code",
+          "range": true,
+          "instant": false,
+          "format": "time_series"
+        },
+        {
+          "refId": "B",
+          "expr": "sum(caption_jobs_total{job=\"caption_app\",mode=\"single\",status=\"partial\"})",
+          "legendFormat": "single / partial",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a4-prometheus"
+          },
+          "editorMode": "code",
+          "range": true,
+          "instant": false,
+          "format": "time_series"
+        },
+        {
+          "refId": "C",
+          "expr": "sum(caption_jobs_total{job=\"caption_app\",mode=\"single\",status=\"failed\"})",
+          "legendFormat": "single / failed",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a4-prometheus"
+          },
+          "editorMode": "code",
+          "range": true,
+          "instant": false,
+          "format": "time_series"
+        },
+        {
+          "refId": "D",
+          "expr": "sum(caption_jobs_total{job=\"caption_app\",mode=\"single\",status=\"rejected\"})",
+          "legendFormat": "single / rejected",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a4-prometheus"
+          },
+          "editorMode": "code",
+          "range": true,
+          "instant": false,
+          "format": "time_series"
+        },
+        {
+          "refId": "E",
+          "expr": "sum(caption_jobs_total{job=\"caption_app\",mode=\"bulk\",status=\"success\"})",
+          "legendFormat": "bulk / success",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a4-prometheus"
+          },
+          "editorMode": "code",
+          "range": true,
+          "instant": false,
+          "format": "time_series"
+        },
+        {
+          "refId": "F",
+          "expr": "sum(caption_jobs_total{job=\"caption_app\",mode=\"bulk\",status=\"partial\"})",
+          "legendFormat": "bulk / partial",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a4-prometheus"
+          },
+          "editorMode": "code",
+          "range": true,
+          "instant": false,
+          "format": "time_series"
+        },
+        {
+          "refId": "G",
+          "expr": "sum(caption_jobs_total{job=\"caption_app\",mode=\"bulk\",status=\"failed\"})",
+          "legendFormat": "bulk / failed",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "a4-prometheus"
+          },
+          "editorMode": "code",
+          "range": true,
+          "instant": false,
+          "format": "time_series"
+        },
+        {
+          "refId": "H",
+          "expr": "sum(caption_jobs_total{job=\"caption_app\",mode=\"bulk\",status=\"rejected\"})",
+          "legendFormat": "bulk / rejected",
           "datasource": {
             "type": "prometheus",
             "uid": "a4-prometheus"
@@ -1641,7 +1777,8 @@
           "min": 0,
           "noValue": "No data",
           "color": {
-            "mode": "palette-classic"
+            "mode": "fixed",
+            "fixedColor": "#0072B2"
           },
           "custom": {
             "drawStyle": "line",
@@ -1651,14 +1788,211 @@
             "showPoints": "always",
             "pointSize": 4,
             "spanNulls": false,
-            "axisLabel": "Completed jobs (count)",
+            "axisLabel": "Completed jobs (count) \u00b7 linear",
             "axisPlacement": "left",
             "scaleDistribution": {
               "type": "linear"
             }
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#0072B2"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#E69F00"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    8,
+                    4
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "C"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#009E73"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    2,
+                    4
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "D"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#CC79A7"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    12,
+                    4
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "E"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#56B4E9"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    4,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "F"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#D55E00"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    16,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "G"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#0072B2"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    2,
+                    8
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "H"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#E69F00"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    8
+                  ]
+                }
+              }
+            ]
+          }
+        ]
       },
       "options": {
         "legend": {
@@ -1674,7 +2008,7 @@
     },
     {
       "id": 17,
-      "title": "Image failure percentage",
+      "title": "Image failure percentage | 1-minute ratio",
       "description": "Failed image attempts divided by all image attempts over one minute. No attempts means the percentage is undefined.",
       "type": "timeseries",
       "datasource": {
@@ -1708,7 +2042,8 @@
           "min": 0,
           "noValue": "No data",
           "color": {
-            "mode": "palette-classic"
+            "mode": "fixed",
+            "fixedColor": "#0072B2"
           },
           "max": 100,
           "custom": {
@@ -1719,14 +2054,36 @@
             "showPoints": "always",
             "pointSize": 4,
             "spanNulls": false,
-            "axisLabel": "Failed image attempts (%)",
+            "axisLabel": "Failed image attempts (%) \u00b7 linear",
             "axisPlacement": "left",
             "scaleDistribution": {
               "type": "linear"
             }
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#0072B2"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid"
+                }
+              }
+            ]
+          }
+        ]
       },
       "options": {
         "legend": {
@@ -1742,7 +2099,7 @@
     },
     {
       "id": 18,
-      "title": "Mean inference latency by mode",
+      "title": "Mean inference latency by mode | 5-minute mean",
       "description": "Five-minute mean of successful inference timings. Excludes queue wait and differs from the complete image-attempt duration.",
       "type": "timeseries",
       "datasource": {
@@ -1789,7 +2146,8 @@
           "min": 0,
           "noValue": "No data",
           "color": {
-            "mode": "palette-classic"
+            "mode": "fixed",
+            "fixedColor": "#0072B2"
           },
           "custom": {
             "drawStyle": "line",
@@ -1799,7 +2157,7 @@
             "showPoints": "always",
             "pointSize": 4,
             "spanNulls": false,
-            "axisLabel": "Inference time (seconds)",
+            "axisLabel": "Inference time (seconds) \u00b7 linear",
             "axisPlacement": "left",
             "scaleDistribution": {
               "type": "linear"
@@ -1846,7 +2204,7 @@
                 "value": {
                   "fill": "dash",
                   "dash": [
-                    6,
+                    8,
                     4
                   ]
                 }
@@ -1869,7 +2227,7 @@
     },
     {
       "id": 19,
-      "title": "Active jobs by mode",
+      "title": "Active jobs by mode | running + queued",
       "description": "Running and queued upload jobs. Returns to zero after jobs finish, including failures. Five-second scraping can miss very short jobs.",
       "type": "timeseries",
       "datasource": {
@@ -1916,7 +2274,8 @@
           "min": 0,
           "noValue": "No data",
           "color": {
-            "mode": "palette-classic"
+            "mode": "fixed",
+            "fixedColor": "#0072B2"
           },
           "custom": {
             "drawStyle": "line",
@@ -1926,7 +2285,7 @@
             "showPoints": "always",
             "pointSize": 4,
             "spanNulls": false,
-            "axisLabel": "Active jobs (count)",
+            "axisLabel": "Active jobs (count) \u00b7 linear",
             "axisPlacement": "left",
             "scaleDistribution": {
               "type": "linear"
@@ -1974,7 +2333,7 @@
                 "value": {
                   "fill": "dash",
                   "dash": [
-                    6,
+                    8,
                     4
                   ]
                 }
@@ -1997,7 +2356,7 @@
     },
     {
       "id": 20,
-      "title": "Client bucket job counts",
+      "title": "Client bucket job counts | 16 shared buckets",
       "description": "Sessions are hashed into 16 buckets. Buckets can contain multiple sessions; these are job counts, not counts of unique users.",
       "type": "table",
       "datasource": {
@@ -2031,7 +2390,8 @@
           "min": 0,
           "noValue": "No data",
           "color": {
-            "mode": "palette-classic"
+            "mode": "fixed",
+            "fixedColor": "#0072B2"
           }
         },
         "overrides": []

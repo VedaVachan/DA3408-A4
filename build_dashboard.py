@@ -8,6 +8,15 @@ from pathlib import Path
 # node_exporter. Include health, counts, throughput, latency percentiles,
 # Summary mean, errors, active jobs, session buckets, model memory, and
 # CPU/RAM correlation with bulk jobs. Use correct units and bounded labels.
+# Additional AI assistance prompt (dashboard presentation update):
+# Add short visible subtitles, explicit linear scale labels, inclusive colors,
+# distinct dash patterns, legends and self-explanatory descriptions. Preserve
+# existing metric queries and the 5-second refresh interval.
+PRESENTATION_PROMPT = (
+    "Add short visible subtitles, explicit linear scale labels, inclusive colors, "
+    "distinct dash patterns, legends and self-explanatory descriptions. "
+    "Preserve existing metric queries and the 5-second refresh interval."
+)
 PROMPT = (
     "Generate a Grafana dashboard for caption_* and node_exporter metrics. "
     "Include health, counts, throughput, histogram percentiles, Summary mean, "
@@ -37,7 +46,7 @@ def panel(title, description, queries, unit, x, y, w=12, h=8,
             "instant": kind != "timeseries",
             "format": "table" if kind == "table" else "time_series",
         })
-        if kind == "timeseries" and len(queries) > 1:
+        if kind == "timeseries":
             overrides.append({
                 "matcher": {"id": "byFrameRefID", "options": ref},
                 "properties": [
@@ -45,12 +54,11 @@ def panel(title, description, queries, unit, x, y, w=12, h=8,
                         "mode": "fixed", "fixedColor": COLORS[index % len(COLORS)]
                     }},
                     {"id": "custom.lineStyle", "value": (
-                        [
-                            {"fill": "solid"},
-                            {"fill": "dash", "dash": [6, 4]},
-                            {"fill": "dash", "dash": [2, 4]},
-                            {"fill": "dash", "dash": [12, 4]},
-                        ][index % 4]
+                        {"fill": "solid"} if index == 0 else
+                        {"fill": "dash", "dash": [
+                            [8, 4], [2, 4], [12, 4], [4, 6],
+                            [16, 6], [2, 8], [10, 8]
+                        ][(index - 1) % 7]}
                     )},
                 ],
             })
@@ -59,7 +67,7 @@ def panel(title, description, queries, unit, x, y, w=12, h=8,
         "unit": unit,
         "min": 0,
         "noValue": "No data",
-        "color": {"mode": "palette-classic"},
+        "color": {"mode": "fixed", "fixedColor": COLORS[0]},
     }
     if maximum is not None:
         defaults["max"] = maximum
@@ -73,7 +81,7 @@ def panel(title, description, queries, unit, x, y, w=12, h=8,
             "showPoints": "always",
             "pointSize": 4,
             "spanNulls": False,
-            "axisLabel": axis or unit,
+            "axisLabel": (axis or unit) + " · linear",
             "axisPlacement": "left",
             "scaleDistribution": {"type": "linear"},
         }
@@ -190,7 +198,7 @@ for title, expression, y in [
             {"id": "unit", "value": "short"},
             {"id": "max", "value": None},
             {"id": "custom.axisPlacement", "value": "right"},
-            {"id": "custom.axisLabel", "value": "Active bulk jobs (count)"},
+            {"id": "custom.axisLabel", "value": "Active bulk jobs (count) · linear"},
         ],
     })
 
@@ -208,7 +216,7 @@ panel("Application RAM and model parameters",
       "count tensor parameters only; they are not total model runtime memory.",
       [("Process RAM", 'caption_app_resident_memory_bytes{job="caption_app"}'),
        ("Model parameters", 'caption_model_weight_bytes{job="caption_app"}')],
-      "bytes", 12, 28, axis="Memory (bytes; displayed in binary units)")
+      "bytes", 12, 28, axis="Memory (bytes)")
 
 panel("Upload job duration: p95",
       "Estimated five-minute p95 of complete jobs, including validation and model loading. "
@@ -273,7 +281,8 @@ dashboard = {
     "description": (
         "CPU captioning health, workload, latency, and Ubuntu VM resources. "
         "AI assistance prompt: " + PROMPT +
-        " Query explanations: docs/AI_PROMPTS_DASHBOARD.md."
+        " Presentation update prompt: " + PRESENTATION_PROMPT +
+        " Query explanations: AI_PROMPTS_DASHBOARD.md."
     ),
     "tags": ["DA3408", "A4", "Prometheus"],
     "schemaVersion": 39,
@@ -314,6 +323,9 @@ attribution = [
     "ChatGPT helped with drafting and explanation. The dashboard was tested "
     "locally using single-image and bulk uploads.",
     "",
+    "Presentation update prompt:",
+    PRESENTATION_PROMPT,
+    "",
     "Original dashboard-generation prompt:",
     PROMPT,
     "",
@@ -327,12 +339,11 @@ for item in panels:
     for target in item["targets"]:
         attribution.extend(["", "```promql", target["expr"], "```"])
 
-Path("docs").mkdir(exist_ok=True)
-Path("docs/AI_PROMPTS_DASHBOARD.md").write_text(
+Path("AI_PROMPTS_DASHBOARD.md").write_text(
     "\n".join(attribution) + "\n", encoding="utf-8"
 )
 
 print("Created grafana/dashboard.json")
-print("Created docs/AI_PROMPTS_DASHBOARD.md")
+print("Created AI_PROMPTS_DASHBOARD.md")
 print("Panels:", len(panels))
 print("Refresh:", dashboard["refresh"])

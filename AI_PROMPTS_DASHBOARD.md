@@ -2,6 +2,9 @@
 
 This document records selected complex PromQL queries for which ChatGPT helped with drafting and explanation. The dashboard was tested locally using single-image and bulk uploads.
 
+Presentation update prompt:
+Add short visible subtitles, explicit linear scale labels, inclusive colors, distinct dash patterns, legends and self-explanatory descriptions. Preserve existing metric queries and the 5-second refresh interval.
+
 Original dashboard-generation prompt:
 Generate a Grafana dashboard for caption_* and node_exporter metrics. Include health, counts, throughput, histogram percentiles, Summary mean, errors, active jobs, client buckets, model memory, and CPU/RAM correlation with bulk jobs. Use correct units, explicit legends, and descriptions.
 
