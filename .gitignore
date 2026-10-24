@@ -1,0 +1,25 @@
+.venv*/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.env
+.env.*
+!.env.example
+logs/
+.cache/
+models/
+*.safetensors
+
+# Local test inputs
+sample.jpg
+sample_batch.zip
+demo_*.zip
+
+# Development backups
+app.before_metrics.py
+captioner.before_metrics.py
+prometheus.before_alerting.yml
+grafana/dashboard.before_polish.json
+
+# Local demonstration inputs
+/demo_inputs/

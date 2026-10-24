@@ -1,0 +1,77 @@
+# AI assistance prompt:
+# Write Prometheus alert rules for caption_app/node target downtime,
+# image failure ratio above 20% with at least five attempts in five minutes,
+# and sustained Ubuntu CPU, RAM, and root disk pressure.
+# Include severity labels, clear annotations, and pending durations.
+
+groups:
+  - name: captioning_alerts
+    interval: 5s
+    rules:
+      - alert: MonitoringTargetDown
+        expr: up{job=~"caption_app|node"} == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "{{ $labels.job }} target is unavailable"
+          description: "Prometheus has been unable to scrape {{ $labels.instance }} for at least 30 seconds."
+
+      - alert: HighImageFailureRatio
+        expr: |
+          (
+            sum(rate(caption_images_total{job="caption_app",status="failed"}[5m]))
+            /
+            sum(rate(caption_images_total{job="caption_app"}[5m]))
+            > 0.20
+          )
+          and
+          (
+            sum(increase(caption_images_total{job="caption_app"}[5m])) >= 5
+          )
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Image failure ratio exceeds 20%"
+          description: "Failures exceed 20% of image attempts over five minutes, with at least five estimated attempts."
+
+      - alert: HighCPUUsage
+        expr: |
+          100 * (
+            1 - avg by (instance) (
+              rate(node_cpu_seconds_total{job="node",mode="idle"}[1m])
+            )
+          ) > 90
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Ubuntu CPU utilisation exceeds 90%"
+          description: "The one-minute CPU utilisation estimate has remained above 90% for two minutes."
+
+      - alert: HighMemoryUsage
+        expr: |
+          100 * (
+            1 - node_memory_MemAvailable_bytes{job="node"}
+            / node_memory_MemTotal_bytes{job="node"}
+          ) > 85
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Ubuntu memory utilisation exceeds 85%"
+          description: "Available-memory-based utilisation has remained above 85% for two minutes."
+
+      - alert: HighRootDiskUsage
+        expr: |
+          100 * (
+            1 - node_filesystem_avail_bytes{job="node",mountpoint="/",fstype!="rootfs"}
+            / node_filesystem_size_bytes{job="node",mountpoint="/",fstype!="rootfs"}
+          ) > 85
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Ubuntu root disk utilisation exceeds 85%"
+          description: "Root filesystem utilisation, using available-space semantics, has remained above 85% for two minutes."
