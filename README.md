@@ -16,6 +16,52 @@ I built a CPU-only Streamlit app that generates image captions using Salesforce 
 | `AI_PROMPTS_DASHBOARD.md` | AI assistance and complex dashboard queries |
 | `evidence/` | Screenshots and caption results |
 
+## Project Structure
+
+```text
+DA3408-A4/
+├── app.py                        # Streamlit interface for single and bulk uploads
+├── captioner.py                  # Generate image captions using BLIP on CPU
+├── uploads.py                    # Validate uploaded images and ZIP files
+├── metrics.py                    # Define application metrics for Prometheus
+├── download_model.py             # Download and cache the BLIP model
+├── requirements.txt              # Python application dependencies
+├── requirements-cpu.txt          # CPU-only PyTorch dependencies
+├── compose.yml                   # Run Prometheus and node_exporter
+├── compose.grafana.yml           # Run Grafana
+├── compose.alerting.yml          # Run Alertmanager and mount alert rules
+├── prometheus.yml                # Configure metric scraping and alert evaluation
+├── alerts.yml                    # Define monitoring alert conditions
+├── alertmanager.yml              # Route alerts to the local receiver
+├── alert_receiver.py             # Receive and save alert notifications
+├── build_dashboard.py            # Generate the Grafana dashboard JSON
+├── polish_dashboard.py           # Apply dashboard layout and styling
+├── grafana/
+│   ├── dashboard.json            # Dashboard export to import into Grafana
+│   └── provisioning/datasources/
+│       └── prometheus.yml        # Configure Grafana's Prometheus connection
+├── demo_inputs/
+│   ├── sample.jpg                # Photograph for the single-image demo
+│   ├── bulk size pics.zip        # Archive for the bulk-upload demo
+│   └── bulk size pics/           # Original photographs used in the ZIP
+├── evidence/
+│   ├── *.png                     # Screenshots of the app, dashboard and tests
+│   ├── bulk_captions.csv         # Exported bulk-caption results
+│   └── single_captions.csv       # Exported single-image result
+├── logs/
+│   └── alerts.jsonl              # Locally recorded alert notifications
+├── tests/
+│   ├── test_captioner.py         # Test caption generation using mocks
+│   ├── test_metrics.py           # Test metric values and export
+│   └── test_uploads.py           # Test image and ZIP validation
+├── AI_DISCLOSURE.md              # Summary of AI assistance used
+├── AI_PROMPTS_DASHBOARD.md       # Dashboard prompts and query assistance
+└── README.md                     # Project overview and setup instructions
+```
+
+`demo_inputs/` and `logs/` are local folders excluded from Git.
+
+
 ## Setup
 
 Requires Ubuntu/Linux, Python 3.12, Docker and Docker Compose. Run all commands from the repository folder.
