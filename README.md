@@ -87,6 +87,7 @@ Internet is needed for initial downloads. Caption generation runs locally on CPU
 **Terminal 1 — Monitoring:**
 
 ```bash
+cd ~/assignments/DA3408-A4
 docker compose -f compose.yml -f compose.grafana.yml \
   -f compose.alerting.yml up -d
 ```
@@ -94,6 +95,7 @@ docker compose -f compose.yml -f compose.grafana.yml \
 **Terminal 2 — Application:**
 
 ```bash
+cd ~/assignments/DA3408-A4
 source .venv/bin/activate
 
 HF_HUB_OFFLINE=1 python -m streamlit run app.py \
@@ -103,6 +105,7 @@ HF_HUB_OFFLINE=1 python -m streamlit run app.py \
 **Terminal 3 — Alert receiver:**
 
 ```bash
+cd ~/assignments/DA3408-A4
 source .venv/bin/activate
 python alert_receiver.py
 ```
@@ -120,6 +123,8 @@ Open these addresses inside Ubuntu:
 | Alertmanager | http://127.0.0.1:9093 |
 
 Select **Single image** or **Bulk ZIP**, upload your file and click **Generate captions**. Results can be downloaded as CSV. ZIP uploads support up to **30 images**.
+
+Demo photographs are local files excluded from Git. Use your own JPEG, PNG, WebP or AVIF photograph for single-image testing, or create a ZIP containing up to 30 supported images for bulk testing.
 
 Opening the app page starts the metrics endpoint. The model loads on the first caption request.
 
@@ -141,7 +146,7 @@ Verified on my VM:
 
 Captioner unit tests use mocks; real inference was tested separately.
 
-The app uses Counter, Gauge, Histogram and Summary metrics. Client labels use 16 session-derived buckets, which do not identify unique users. Calculations and AI attribution are documented in `docs/`.
+The app uses Counter, Gauge, Histogram and Summary metrics. Client labels use 16 session-derived buckets, which do not identify unique users. Dashboard prompts and query assistance are documented in `AI_PROMPTS_DASHBOARD.md`. Overall AI use is described in `AI_DISCLOSURE.md`.
 
 ## Stop
 
