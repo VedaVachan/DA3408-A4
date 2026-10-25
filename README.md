@@ -119,6 +119,8 @@ For a fresh Grafana installation, log in with `admin/admin` and change the passw
 
 ## Verification
 
+A dated sample of the application's live Prometheus output is in `evidence/metrics_snapshot.txt`. Counters are cumulative for the running app process, so the bulk total may exceed the 27 images in the demo ZIP.
+
 ```bash
 python -m pytest tests -q
 ```
