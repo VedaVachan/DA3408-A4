@@ -2,19 +2,6 @@
 
 I built a CPU-only Streamlit app that generates image captions using Salesforce BLIP. It supports single-image and bulk ZIP uploads, with monitoring through Prometheus, node_exporter, Grafana and Alertmanager.
 
-## Project Structure
-
-| Files / folder | Purpose |
-|---|---|
-| `app.py`, `captioner.py`, `uploads.py` | Interface, caption generation and upload validation |
-| `metrics.py` | Prometheus metrics |
-| `download_model.py` | Download and cache the model |
-| `compose*.yml`, `prometheus.yml` | Monitoring services and scrape configuration |
-| `alerts.yml`, `alertmanager.yml`, `alert_receiver.py` | Alert rules and notifications |
-| `grafana/` | Dashboard JSON and data-source configuration |
-| `tests/` | Automated tests |
-| `AI_PROMPTS_DASHBOARD.md` | AI assistance and complex dashboard queries |
-| `evidence/` | Screenshots and caption results |
 
 ## Project Structure
 
